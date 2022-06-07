@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import LoginForm from './components/LoginForm';
+import Header from './components/Header';
 import ListView from './components/ListComponent/ListView';
 import './index.css';
+import video from '../src/assets/swbackground.mp4';
 
 function App() {
-  const [user, setUser] = useState({ name: ""});
+  const [user, setUser] = useState({ name: "" });
   const [error, setError] = useState("");
+  const [caracter, setCaracter] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [] });
 
@@ -28,9 +31,8 @@ useEffect(() => {
   //Manual test
   const users={    
     name: "Luke Skywalker" ,
-    password: "luke123"}
+    password: "lukeskywalker1234"}
 
-  var caracter;
   const [people, setPeople] = useState('');
 
 
@@ -44,22 +46,22 @@ useEffect(() => {
 
     
 
-        if (details.name === users.name && details.password === '') {
+        if (details.name === users.name && details.password === users.password) {
           console.log("User Logged In");
 
-          if( users.name === "Luke Skywalker") caracter = 0;
-          if( users.name === "C-3PO") caracter = 1;
-          if( users.name === "R2-D2") caracter = 2;
-          if( users.name === "Darth Vader") caracter = 3;
-          if( users.name === "Leia Organa") caracter = 4;
+          if( users.name === "Luke Skywalker") setCaracter(0);
+          if( users.name === "C-3PO") setCaracter(1);
+          if( users.name === "R2-D2")  setCaracter(2);
+          if( users.name === "Darth Vader")  setCaracter(3);
+          if( users.name === "Leia Organa") setCaracter(4);
 
           console.log(caracter) //caracter id
 
-          console.log(data[caracter])
           
           
           setUser({
-            name: details.name
+            name: details.name,
+            caracter: caracter
           })
           // console.log(data.hits[1]);
           
@@ -79,17 +81,33 @@ useEffect(() => {
     setUser({name: ""})
   }
 
+  //TESTING PROPS DATA
+  //{props.data[props.caracter].name}
+
   
 
   return (
     <div className="App">
+
       {(user.name !== "") ? (
-        <div className='welcome'>
-          <h2>Welcome, <span>{user.name}</span></h2>
-          <button onClick={Logout}>Logout</button>
+        <>
+        <div class="sidebar">
+          <a href="/">Logout</a>
         </div>
+        <Header></Header>
+        <div className='welcome'>
+          <h1>Welcome, <span>{user.name}</span></h1>
+          
+        </div>
+        <ListView data={data} caracter={caracter} ></ListView>
+        </>
       ) : (
-        <LoginForm Login={Login} error={error} />
+        <>
+        <video className='videoTag' autoPlay loop muted>
+        <source src={video} type='video/mp4' />
+        </video>
+          <LoginForm Login={Login} error={error} />
+        </>
       )}
 
     </div>
